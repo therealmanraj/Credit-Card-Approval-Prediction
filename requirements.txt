@@ -1,0 +1,9 @@
+numpy
+pandas
+matplotlib
+missingno
+seaborn
+scikit-learn
+yellowbrick
+pandas_profiling
+imblearn

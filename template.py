@@ -15,7 +15,7 @@ list_of_files = [
     "app.py",
     "requirements.txt",
     "setup.py",
-    "notebooks/CCFD.ipynb",
+    "notebooks/CCAP.ipynb",
 ]
 
 for file_path in list_of_files:
