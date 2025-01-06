@@ -59,6 +59,41 @@ Since the objective of this problem is to minimize the risk of credit default fo
 
 Given the current economic conditions, we prioritize recall as our metric.
 
+# Quick glance at the results
+
+Correlation between the features.
+
+![heatmap](assets/cor_matrix.png)
+
+Confusion matrix of gradrient boosting classifier.
+
+![Confusion matrix](assets/confusion_matrix.png)
+
+ROC curve of gradrient boosting classifier.
+
+![ROC curve](assets/roc_curve.png)
+
+Top 3 models (with default parameters)
+
+| Model                  | Recall score |
+| ---------------------- | ------------ |
+| Support vector machine | 88%          |
+| Gradient boosting      | 90%          |
+| Adaboost               | 78%          |
+
+**_The final model used is: Gradient boosting_**
+
+## Lessons learned and recommendation
+
+- Based on the analysis on this project, we found out that the education level and type of relationship are the most predictive features to determine if someone makes more or less than 50K. Other features like Capital gain, hours work and age are also usefull. The least usefull features are: their occupation and the workclass they belong to.
+- Recommendation would be to focus more on the most predictive feature when looking at the applicant profile, and pay less attention on their occupation and workclass.
+
+## Limitation and what can be improved
+
+- Speed: since the model is stored on AWS S3, it can take some few seconds to load. Solution: cache the model with the Streamlit @st.experimental_singleton for faster reload.
+- Dataset used: the dataset used is from 1990, inflation has not been taken into consideration and the countries's economies have changed since then. Solution: retrain with a more recent dataset.
+- Hyperparameter tuning: I used RandomeSearchCV to save time but could be improved by couple of % with GridSearchCV.
+
 ## Run Locally (Windows & macOS/Linux)
 
 ### 1. Initialize Git
@@ -158,16 +193,6 @@ pip list
 ## Explore the Notebook
 
 Explore the notebook file [here](https://nbviewer.org/github/therealmanraj/Credit-Card-Approval-Prediction/blob/main/notebooks/CCAP.ipynb)
-
-## Repository Structure
-
-```
-Credit-Card-Approval-Prediction
-├── assets
-├── notebooks
-├── data
-└── README.md
-```
 
 ## Contribution
 
