@@ -181,8 +181,6 @@ class DataPipeline(BaseEstimator, TransformerMixin):
     
     def data_transformation(self, train_df, test_df):
         try:
-            logging.info("Read train and test data.")
-            
             pipeline_obj = self.initiate_pipeline()
             logging.info("Obtained pipeline object.")
             
