@@ -12,7 +12,7 @@ from imblearn.over_sampling import SMOTE
 from sklearn.pipeline import Pipeline
 
 from utils.common import CustomException
-from utils.common import save_object
+from utils.common import save_object, load_object
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -170,7 +170,6 @@ class DataPipeline(BaseEstimator, TransformerMixin):
                 ("ordinal_encoding",   FunctionTransformer(self.ordinal_encoding, validate=False)),
                 ("min_max_scaling",    FunctionTransformer(self.min_max_scaling, validate=False)),
                 ("change_to_num",      FunctionTransformer(self.change_to_num,   validate=False)),
-                # ("oversampling",       FunctionTransformer(self.oversampling,    validate=False)),
             ]
             pipeline = Pipeline(steps=steps)
             logging.info("Pipeline object created.")
@@ -184,17 +183,19 @@ class DataPipeline(BaseEstimator, TransformerMixin):
         try:
             logging.info("Read train and test data.")
             
-            # 1) actually CALL the method to get your Pipeline object
             pipeline_obj = self.initiate_pipeline()
             logging.info("Obtained pipeline object.")
             
-            # 2) fit on train, transform on test
             df = pd.concat([train_df, test_df])
             model = pipeline_obj.fit(df)
-            input_feature_train = pipeline_obj.transform(train_df)
-            input_feature_test  = pipeline_obj.transform(test_df)
             
-            # 3) save the fitted pipeline
+            input_feature_train = pipeline_obj.transform(train_df)
+            input_feature_train = self.oversampling(input_feature_train)
+            
+            input_feature_test  = pipeline_obj.transform(test_df)
+            input_feature_test = self.oversampling(input_feature_test)
+            
+            
             os.makedirs(self.data_transformation_config.transformation_obj_dir_path, exist_ok=True)
             save_object(
                 file_path=self.data_transformation_config.transformation_obj_file_path,
@@ -202,33 +203,7 @@ class DataPipeline(BaseEstimator, TransformerMixin):
             )
             logging.info(f"Saved preprocessing object to {self.data_transformation_config.transformation_obj_file_path}")
             
-            print(f"Transformed train data: {input_feature_train.columns}")
-            
             return input_feature_train, input_feature_test
-            # return input_feature_train, input_feature_test, self.data_transformation_config.transformation_obj_file_path
-
-        except Exception as e:
-            raise CustomException(e, sys)
-        
-    
-    def transformation(self, data_df):
-        try:
-            logging.info("Read train and test data.")
-            
-            # 1) actually CALL the method to get your Pipeline object
-            loaded = pickle.load(open(self.data_transformation_config.transformation_obj_file_path,'rb'))
-                
-            # pipeline_obj = self.initiate_pipeline()
-            logging.info("Obtained pipeline object.")
-            
-            data_df = data_df.drop(columns='Is high risk', errors='ignore')
-            # 2) Transform on prediction
-            transformed = loaded.transform(data_df)
-            
-            print(f"Transformed data: {transformed.columns}")
-            # transformed  = loaded_classifier.transform(data_df)
-            
-            return transformed
 
         except Exception as e:
             raise CustomException(e, sys)

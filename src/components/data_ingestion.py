@@ -31,11 +31,9 @@ class DataIngestion:
         """
         try:
             train_df = pd.read_csv(self.config.train_path)
-            # print(f"Train data loaded successfully from {self.config.train_path}")
             logging.info(f"Train data loaded successfully from {self.config.train_path}")
             
             test_df = pd.read_csv(self.config.test_path)
-            # print(f"Test data loaded successfully from {self.config.test_path}")
             logging.info(f"Test data loaded successfully from {self.config.test_path}")
             
             print(f"Test data loaded successfully from {self.config.file_path}")
